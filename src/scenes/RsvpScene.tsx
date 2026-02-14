@@ -59,14 +59,21 @@ END:VCALENDAR`;
         }
 
         const message = AppConfig.rsvp.whatsappMessage.replace('{NAME}', guestName);
-        const phone = AppConfig.rsvpContact.replace(/\D/g, ''); // Clean phone number
+        let phone = AppConfig.rsvpContact.replace(/\D/g, ''); // Clean phone number
+
+        // Auto-format RO numbers: 07xx... -> 407xx...
+        if (phone.startsWith('07') && phone.length === 10) {
+            phone = '4' + phone;
+        }
 
         // Check for mobile device
         const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
         if (isMobile) {
-            window.location.href = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+            // Use api.whatsapp.com for better deep link support
+            window.location.href = `https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(message)}`;
         } else {
+            // Desktop web whatsapp
             window.open(`https://web.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(message)}`, '_blank');
         }
     };
