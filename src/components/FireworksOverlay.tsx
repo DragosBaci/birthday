@@ -40,7 +40,7 @@ export const FireworksOverlay: React.FC = () => {
         resize();
 
         const createFirework = (x: number, y: number) => {
-            const particleCount = 50;
+            const particleCount = 30; // Reduced from 50
             for (let i = 0; i < particleCount; i++) {
                 const angle = Math.random() * Math.PI * 2;
                 const speed = Math.random() * 5 + 2;
@@ -49,7 +49,7 @@ export const FireworksOverlay: React.FC = () => {
                     y,
                     vx: Math.cos(angle) * speed,
                     vy: Math.sin(angle) * speed,
-                    alpha: 1,
+                    alpha: 0.6, // Reduced from 1
                     color: COLORS[Math.floor(Math.random() * COLORS.length)],
                     size: Math.random() * 3 + 1,
                 });
@@ -117,8 +117,8 @@ export const FireworksOverlay: React.FC = () => {
                 onClick={() => setEnabled(!enabled)}
                 style={{
                     position: 'fixed',
-                    bottom: '20px',
-                    right: '20px',
+                    top: '20px', // Moved from bottom
+                    left: '20px', // Moved from right
                     zIndex: 1000,
                     background: 'rgba(0,0,0,0.5)',
                     color: 'white',
