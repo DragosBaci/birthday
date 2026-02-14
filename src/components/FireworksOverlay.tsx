@@ -15,7 +15,7 @@ interface Particle {
 
 export const FireworksOverlay: React.FC = () => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
-    const [enabled, setEnabled] = useState(true);
+    const [enabled, setEnabled] = useState(false);
     const particles = useRef<Particle[]>([]);
     const animationFrameId = useRef<number>(0);
 
