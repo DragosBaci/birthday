@@ -33,7 +33,7 @@ export const FinalScene: React.FC = () => {
             </div>
 
             <div style={{ marginTop: '50px', opacity: 0.5, fontSize: '0.9rem' }}>
-                Creat cu ❤️ pentru {AppConfig.celebrantName}
+                Creat cu ❤️ de {AppConfig.celebrantName}
             </div>
         </div>
     );
