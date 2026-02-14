@@ -8,7 +8,7 @@ export const AppConfig = {
   rsvpContact: "0753849169", // REPLACE WITH REAL CONTACT
   dressedCode: "Smart Casual / Party Vibes",
   extraJokeLine: "Dacă nu vii, plânge tortul.",
-  
+
   // Scene content
   intro: {
     title: "PREGĂTEȘTE-TE!",
@@ -37,8 +37,12 @@ export const AppConfig = {
     noButton: "NU...", // This text is critical for the logic
     successTitle: "YEEEEES!",
     successMessage: "Abia aștept să ne distrăm!",
+    inputLabel: "Cum te cheamă?",
+    inputPlaceholder: "Numele tău...",
+    confirmButton: "TRIMITE CONFIRMARE", // Was sendMail
+    whatsappMessage: "Salut! Sunt {NAME} și confirm prezența la party! 🚀",
     addToCalendar: "ADAUGĂ ÎN CALENDAR",
-    sendMail: "TRIMITE CONFIRMARE"
+    // Removed sendMail key since we are using confirmButton now for the main action
   },
   final: {
     title: "NE VEDEM ACOLO!",

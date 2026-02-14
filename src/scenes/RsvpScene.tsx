@@ -2,12 +2,13 @@
 import React, { useState } from 'react';
 import { AppConfig } from '../config';
 import confetti from 'canvas-confetti';
-import { Calendar, Mail } from 'lucide-react';
+import { Calendar, Send } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export const RsvpScene: React.FC = () => {
     const [noBtnPos, setNoBtnPos] = useState({ top: '60%', left: '70%' });
     const [showModal, setShowModal] = useState(false);
+    const [guestName, setGuestName] = useState('');
 
     const moveNoButton = () => {
         const randomTop = Math.random() * 60 + 20; // 20% to 80%
@@ -51,10 +52,23 @@ END:VCALENDAR`;
         document.body.removeChild(link);
     };
 
-    const sendMail = () => {
-        const subject = `RSVP Party ${AppConfig.celebrantName}`;
-        const body = `Salut! Confirm prezența la petrecere. Abia aștept!`;
-        window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    const handleConfirm = () => {
+        if (!guestName.trim()) {
+            alert('Te rog scrie-ți numele!');
+            return;
+        }
+
+        const message = AppConfig.rsvp.whatsappMessage.replace('{NAME}', guestName);
+        const phone = AppConfig.rsvpContact.replace(/\D/g, ''); // Clean phone number
+
+        // Check for mobile device
+        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+        if (isMobile) {
+            window.location.href = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+        } else {
+            window.open(`https://web.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(message)}`, '_blank');
+        }
     };
 
     return (
@@ -119,30 +133,55 @@ END:VCALENDAR`;
                             left: 0,
                             width: '100%',
                             height: '100%',
-                            background: 'rgba(0,0,0,0.8)',
+                            background: 'rgba(0,0,0,0.9)',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
                             zIndex: 200
                         }}
                     >
-                        <div style={{ background: '#1a1a1a', padding: '40px', borderRadius: '30px', textAlign: 'center', maxWidth: '90%', border: '2px solid var(--neon-pink)' }}>
-                            <div style={{ fontSize: '4rem', marginBottom: '20px' }}>🎉</div>
-                            <h3 style={{ color: 'var(--neon-pink)', fontSize: '2.5rem', marginBottom: '10px' }}>
+                        <div style={{ background: '#1a1a1a', padding: '30px', borderRadius: '30px', textAlign: 'center', maxWidth: '90%', width: '400px', border: '2px solid var(--neon-pink)' }}>
+                            <div style={{ fontSize: '3rem', marginBottom: '10px' }}>🎉</div>
+                            <h3 style={{ color: 'var(--neon-pink)', fontSize: '2rem', marginBottom: '10px' }}>
                                 {AppConfig.rsvp.successTitle}
                             </h3>
-                            <p style={{ fontSize: '1.2rem', marginBottom: '30px' }}>
+                            <p style={{ fontSize: '1rem', marginBottom: '20px', opacity: 0.8 }}>
                                 {AppConfig.rsvp.successMessage}
                             </p>
 
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-                                <button onClick={downloadIcs} style={{ background: 'white', color: 'black', padding: '15px', borderRadius: '15px', fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}>
-                                    <Calendar size={20} /> {AppConfig.rsvp.addToCalendar}
+                            {/* Name Input */}
+                            <div style={{ marginBottom: '20px', textAlign: 'left' }}>
+                                <label style={{ display: 'block', marginBottom: '5px', fontSize: '0.9rem', color: 'var(--neon-blue)' }}>
+                                    {AppConfig.rsvp.inputLabel}
+                                </label>
+                                <input
+                                    type="text"
+                                    value={guestName}
+                                    onChange={(e) => setGuestName(e.target.value)}
+                                    placeholder={AppConfig.rsvp.inputPlaceholder}
+                                    style={{
+                                        width: '100%',
+                                        padding: '12px',
+                                        borderRadius: '10px',
+                                        border: '1px solid #444',
+                                        background: '#333',
+                                        color: 'white',
+                                        fontSize: '1rem',
+                                        outline: 'none'
+                                    }}
+                                />
+                            </div>
+
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                                <button onClick={handleConfirm} style={{ background: 'var(--neon-green)', color: 'black', padding: '15px', borderRadius: '15px', fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', fontSize: '1.1rem' }}>
+                                    <Send size={20} /> {AppConfig.rsvp.confirmButton}
                                 </button>
-                                <button onClick={sendMail} style={{ background: 'transparent', border: '1px solid white', color: 'white', padding: '15px', borderRadius: '15px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}>
-                                    <Mail size={20} /> {AppConfig.rsvp.sendMail}
+
+                                <button onClick={downloadIcs} style={{ background: 'transparent', border: '1px solid #666', color: '#ccc', padding: '12px', borderRadius: '15px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', fontSize: '0.9rem' }}>
+                                    <Calendar size={18} /> {AppConfig.rsvp.addToCalendar}
                                 </button>
-                                <button onClick={() => setShowModal(false)} style={{ marginTop: '20px', background: 'none', color: '#666', border: 'none', textDecoration: 'underline' }}>
+
+                                <button onClick={() => setShowModal(false)} style={{ marginTop: '10px', background: 'none', color: '#666', border: 'none', textDecoration: 'underline' }}>
                                     Închide
                                 </button>
                             </div>
